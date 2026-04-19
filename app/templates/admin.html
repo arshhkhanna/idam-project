@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IDAM Admin Panel</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="/static/css/admin.css">
+</head>
+<body class="admin-body">
+
+<div class="admin-layout">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            <h2>🛡️ IDAM</h2>
+            <p>Admin Panel</p>
+        </div>
+        <nav class="sidebar-nav">
+            <button class="nav-item active" data-tab="users" onclick="showTab('users')">
+                👥 Users
+            </button>
+            <button class="nav-item" data-tab="files" onclick="showTab('files')">
+                📁 Files
+            </button>
+            <button class="nav-item" data-tab="roles" onclick="showTab('roles')">
+                🔐 Roles
+            </button>
+            <button class="nav-item" data-tab="audit" onclick="showTab('audit')">
+                📋 Audit Logs
+            </button>
+        </nav>
+        <div class="sidebar-footer">
+            <div id="adminEmail" class="admin-email">—</div>
+            <button class="btn-signout" onclick="signOut()">Sign Out</button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="admin-main">
+
+        <!-- Header -->
+        <div class="admin-header">
+            <h1 id="tabTitle">Users</h1>
+            <div id="adminAlert" class="alert" style="margin:0; max-width:400px;"></div>
+        </div>
+
+        <!-- Users Tab -->
+        <div id="usersTab" class="tab active">
+            <div class="toolbar">
+                <input type="text" id="userSearch" placeholder="🔍 Search users..." oninput="filterUsers()" />
+            </div>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Email</th>
+                            <th>Status</th>
+                            <th>MFA</th>
+                            <th>Roles</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTable"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Files Tab -->
+        <div id="filesTab" class="tab">
+            <div class="toolbar">
+                <input type="text" id="fileSearch" placeholder="🔍 Search files..." oninput="filterFiles()" />
+            </div>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>File Name</th>
+                            <th>Type</th>
+                            <th>Size</th>
+                            <th>Allowed Roles</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="filesTable"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Roles Tab -->
+        <div id="rolesTab" class="tab">
+            <div class="roles-grid" id="rolesGrid"></div>
+        </div>
+
+        <!-- Audit Tab -->
+        <div id="auditTab" class="tab">
+            <div class="toolbar">
+                <input type="text" id="auditSearch" placeholder="🔍 Search logs..." oninput="filterAudit()" />
+                <button class="btn-refresh" onclick="loadAuditLogs()">🔄 Refresh</button>
+            </div>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Email</th>
+                            <th>Action</th>
+                            <th>Status</th>
+                            <th>IP Address</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody id="auditTable"></tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Assign File Access Modal -->
+<div id="assignModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>🔒 Manage File Access</h3>
+            <button class="modal-close" onclick="closeModal()">✕</button>
+        </div>
+        <div class="modal-body">
+            <p id="modalFileName" style="color:#64748b; margin-bottom:16px;"></p>
+            <div class="form-group">
+                <label>Assign to Roles (comma separated)</label>
+                <input type="text" id="modalRoles" placeholder="e.g. hr_manager, developer_a" />
+            </div>
+            <div class="form-group">
+                <label>Assign to User IDs (comma separated)</label>
+                <input type="text" id="modalUsers" placeholder="e.g. 1, 2, 3" />
+            </div>
+            <button onclick="submitAssignment()">Save Access</button>
+        </div>
+    </div>
+</div>
+
+<!-- Assign Role Modal -->
+<div id="roleModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>👥 Manage User Roles</h3>
+            <button class="modal-close" onclick="closeRoleModal()">✕</button>
+        </div>
+        <div class="modal-body">
+            <p id="roleModalUser" style="color:#64748b; margin-bottom:16px;"></p>
+            <div class="form-group">
+                <label>Assign Role</label>
+                <select id="roleSelect">
+                    <option value="super_admin">Super Admin</option>
+                    <option value="admin">Admin / IT Manager</option>
+                    <option value="security_analyst">Security Analyst</option>
+                    <option value="monitor_audit">Monitor & Audit</option>
+                    <option value="developer_a">Developer A</option>
+                    <option value="developer_b">Developer B</option>
+                    <option value="business_analyst">Business Analyst</option>
+                    <option value="hr_manager">HR Manager</option>
+                    <option value="support_a">Support A</option>
+                    <option value="general_user">General User</option>
+                </select>
+            </div>
+            <button onclick="submitRoleAssignment()">Assign Role</button>
+        </div>
+    </div>
+</div>
+
+<script src="/static/js/api.js"></script>
+<script src="/static/js/admin.js"></script>
+</body>
+</html>

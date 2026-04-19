@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IDAM System</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+<div class="container" style="max-width: 600px;">
+    <div class="card">
+
+        <!-- LOGIN SCREEN -->
+        <div id="loginScreen" class="screen active">
+            <div class="logo">
+                <h1>🔐 IDAM</h1>
+                <p>Identity & Access Management</p>
+            </div>
+            <div id="loginAlert" class="alert"></div>
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" id="loginEmail" placeholder="you@example.com" />
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="loginPassword" placeholder="••••••••" />
+            </div>
+            <button onclick="handleLogin()" id="loginBtn">Sign In</button>
+            <button class="secondary" onclick="showScreen('resetScreen')">Forgot Password?</button>
+        </div>
+
+        <!-- MFA SCREEN -->
+        <div id="mfaScreen" class="screen">
+            <div class="logo">
+                <h1>📱 MFA</h1>
+                <p>Two-Factor Authentication</p>
+            </div>
+            <div id="mfaAlert" class="alert"></div>
+            <p class="mfa-hint">Enter the 6-digit code from your Google Authenticator app</p>
+            <div class="form-group">
+                <label>Authentication Code</label>
+                <input type="text" id="mfaCode" placeholder="000000" maxlength="6"
+                    style="text-align:center; font-size:24px; letter-spacing:8px;" />
+            </div>
+            <button onclick="handleMFALogin()" id="mfaBtn">Verify Code</button>
+            <button class="secondary" onclick="showScreen('loginScreen')">← Back to Login</button>
+        </div>
+
+        <!-- DASHBOARD SCREEN -->
+        <div id="dashboardScreen" class="screen">
+            <div class="logo">
+                <h1>🛡️ IDAM</h1>
+                <p>Welcome back!</p>
+            </div>
+            <div id="dashboardAlert" class="alert"></div>
+
+            <!-- User Profile -->
+            <div class="profile-card">
+                <div class="email" id="userEmail">—</div>
+                <span class="badge active">● Active</span>
+                <span class="badge admin" id="adminBadge" style="display:none">Admin</span>
+                <div id="userRoles" style="margin-top:8px; font-size:12px; color:#64748b;"></div>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- File Manager -->
+            <div class="file-manager">
+                <h3>📁 My Files</h3>
+                <div class="upload-area">
+                    <label class="upload-label" for="fileInput">
+                        <span>Click to select</span> or drag & drop a file
+                    </label>
+                    <input type="file" id="fileInput" onchange="updateFileName()" />
+                    <div id="selectedFileName" style="font-size:13px; color:#6366f1; margin-bottom:8px;"></div>
+                    <button class="upload-btn" onclick="uploadFile()" id="uploadBtn">⬆ Upload File</button>
+                </div>
+                <div class="file-list" id="fileList">
+                    <p class="no-files">Loading files...</p>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Actions -->
+            <button onclick="getProfile()" class="secondary">🔄 Refresh Profile</button>
+            <button onclick="handleRefreshToken()" class="secondary">🔑 Refresh Token</button>
+            <!-- Only visible to admin roles — hidden by default, shown by app.js -->
+            <button id="adminPanelBtn" onclick="openAdminPanel()" class="secondary" style="display:none">⚙️ Admin Panel</button>
+            <button onclick="handleLogout()" class="danger">Sign Out</button>
+            <div class="token-info" id="tokenInfo"></div>
+        </div>
+
+        <!-- PASSWORD RESET SCREEN -->
+        <div id="resetScreen" class="screen">
+            <div class="logo">
+                <h1>🔑 Reset</h1>
+                <p>Password Recovery</p>
+            </div>
+            <div id="resetAlert" class="alert"></div>
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" id="resetEmail" placeholder="you@example.com" />
+            </div>
+            <button onclick="handleForgotPassword()">Send Reset Token</button>
+            <div id="resetTokenSection" style="display:none">
+                <div class="divider"></div>
+                <div class="form-group">
+                    <label>Reset Token</label>
+                    <input type="text" id="resetToken" placeholder="Paste token here" />
+                </div>
+                <div class="form-group">
+                    <label>New Password</label>
+                    <input type="password" id="newPassword" placeholder="••••••••" />
+                </div>
+                <button onclick="handleResetPassword()">Reset Password</button>
+            </div>
+            <button class="secondary" onclick="showScreen('loginScreen')">← Back to Login</button>
+        </div>
+
+    </div>
+</div>
+
+<script src="/static/js/api.js"></script>
+<script src="/static/js/app.js"></script>
+<script src="/static/js/auth.js"></script>
+<script src="/static/js/files.js"></script>
+</body>
+</html>
